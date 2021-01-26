@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import axios from 'axios';
 import Card from './Card';
 import './App.css';
 
@@ -14,9 +15,23 @@ class App extends Component {
     }
   }
 
+  componentDidMount(){
+    this.getCards();
+  }
+
+  getCards = () => [
+    axios.get('https://api.pokemontcg.io/v1/cards')
+     .then(res=>{
+       console.log(res.data.cards)
+       this.setState({
+         cards: res.data.cards
+       })
+     }).catch(err => console.log(err))
+  ]
+
   render(){
     const mappedCards = this.state.cards.map( card => {
-      return <Card/>
+      return <Card key={card.id} name={card.name} imageUrl={card.imageUrl}/>
     })
   return (
     <div className="App">
